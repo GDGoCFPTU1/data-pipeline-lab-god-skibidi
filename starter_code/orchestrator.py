@@ -21,21 +21,27 @@ def run_pipeline():
     # Xử lý Group A (PDFs)
     pdf_files = glob.glob(os.path.join(RAW_DATA_DIR, "group_a_pdfs", "*.json"))
     for file_path in pdf_files:
-        with open(file_path, 'r') as f:
+        with open(file_path, 'r', encoding='utf-8') as f:
             raw_data = json.load(f)
         
-        # TODO: Bước 1: Gọi hàm xử lý PDF (process_pdf_data)
+        # Bước 1: Gọi hàm xử lý PDF (process_pdf_data)
+        processed_data = process_pdf_data(raw_data)
         
-        # TODO: Bước 2: Kiểm tra chất lượng (run_semantic_checks). 
+        # Bước 2: Kiểm tra chất lượng (run_semantic_checks). 
         # Nếu đạt (True) thì thêm vào list final_kb
+        if run_semantic_checks(processed_data):
+            final_kb.append(processed_data)
 
     # Xử lý Group B (Videos)
     video_files = glob.glob(os.path.join(RAW_DATA_DIR, "group_b_videos", "*.json"))
     for file_path in video_files:
-        with open(file_path, 'r') as f:
+        with open(file_path, 'r', encoding='utf-8') as f:
             raw_data = json.load(f)
         
-        # TODO: Làm tương tự như phần PDF (gọi hàm xử lý Video và kiểm tra chất lượng)
+        # Làm tương tự như phần PDF (gọi hàm xử lý Video và kiểm tra chất lượng)
+        processed_video = process_video_data(raw_data)
+        if run_semantic_checks(processed_video):
+            final_kb.append(processed_video)
 
     # Lưu kết quả
     with open(OUTPUT_FILE, 'w') as f:
